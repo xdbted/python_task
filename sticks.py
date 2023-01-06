@@ -18,3 +18,7 @@ while sticks > 0:
     if sticks <= 0:
         print(f'{player1.capitalize() if player == 1 else player2.capitalize()} you lose :(, there are no more sticks '
               f'on the table')
+    if player == 1:
+        player = 0
+    else:
+        player = 1

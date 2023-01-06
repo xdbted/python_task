@@ -1,62 +1,54 @@
 import random
 
-x0 = ' '
-x1 = ' '
-x2 = ' '
-x3 = ' '
-x4 = ' '
-x5 = ' '
-x6 = ' '
-x7 = ' '
-x8 = ' '
+board = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 
-i1 = input('Введите имя игрок 1: ')
-i2 = input('Введите имя игрок 2: ')
+i1 = input('Player 1 enter your name: ')
+i2 = input('Player 2 enter your name: ')
+
+first = random.randint(1, 2)
 
 
-class Game:
-
-    def __init__(self, name1, name2):
-        self.name1 = name1
-        self.name2 = name2
-
-    @staticmethod
-    def who_go_first(self):
-        who_go_first = random.randint(1, 2)
-        if who_go_first == 1:
-            print(f'Первым будет ходить игрок {self.name1}')
+def print_state(state):
+    for i, c in enumerate(state):
+        if (i + 1) % 3 == 0:
+            print(f'{c}')
         else:
-            print(f'Первым будет ходить игрок {self.name2}')
-
-    @staticmethod
-    def winning_combinations():
-        if x0 == x4 == x8 or x0 == x3 == x6 or x1 == x4 == x7 or x2 == x5 == x8 or x0 == x1 == x2 or x3 == x4 == x5 or x6 == x7 == x8 or x2 == x4 == x6:
-            return False
-        else:
-            return True
-
-    @staticmethod
-    def pole():
-        return f'{x0}|{x1}|{x2}\n{x3}|{x4}|{x5}\n{x6}|{x7}|{x8}'
+            print(f'{c}|', end='')
 
 
-pole1 = Game(i1, i2)
-pole2 = Game.pole()
+win_comb = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4, 8), (2, 4, 6)]
 
 
-def game(pole2):
+def get_winner(state, combinations):
+    for x, y, z in combinations:
+        if state[x] == state[y] == state[z] and (state[x] == 'X' or state[x] == 'O'):
+            return state[x]
+    return ''
+
+
+def play_game(board):
+    global first
     sign = 'X'
-    should_cont = True
-    while Game.winning_combinations() or should_cont:
+    while get_winner(board, win_comb) == '':
         try:
-            i = int(input(f'{i1 if Game.who_go_first() else i2} куда Вы хотите поставить '
-                          f'крестик? Выберите число от 0 до 8:'))
+            index = int(input(f'{i1.capitalize() if first == 1 else i2.capitalize()} where do u want to draw {sign}? '))
         except ValueError as x:
             print(f'You entered incorrect data: {x}. Try entering a number!')
             continue
-        if 0 < i and i > 8:
-            print('You entered an incorrect number, try to take from 0 to 8 sticks!')
+        if 8 < index < 0:
+            print('You entered an incorrect number, try 0 to 8!')
             continue
-        if i == 0:
-            pass
-        should_cont = input('Want play again? y/n : ').lower() == 'y'
+        board[index] = sign
+        print(print_state(board))
+        win_sign = get_winner(board, win_comb)
+        if win_sign != '':
+            print(f'We have a winner: {win_sign}')
+        sign = 'X' if sign == 'O' else 'O'
+
+        if first == 1:
+            first = 0
+        else:
+            first = 1
+
+
+play_game(board)
