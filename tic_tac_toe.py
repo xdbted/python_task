@@ -44,7 +44,6 @@ def play_game(board):
         if win_sign != '':
             print(f'We have a winner: {win_sign}')
         sign = 'X' if sign == 'O' else 'O'
-
         if first == 1:
             first = 0
         else:
